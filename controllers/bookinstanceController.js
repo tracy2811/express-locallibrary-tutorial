@@ -6,7 +6,7 @@ const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 // Display list of all BookInstances
-exports.bookinstance_list = function (req, res) {
+exports.bookinstance_list = function (req, res, next) {
 
 	BookInstance.find()
 		.populate('book')
@@ -17,7 +17,7 @@ exports.bookinstance_list = function (req, res) {
 };
 
 // Display detail page for a specific BookInstance
-exports.bookinstance_detail = function (req, res) {
+exports.bookinstance_detail = function (req, res, next) {
 	BookInstance.findById(req.params.id)
 		.populate('book')
 		.exec(function (err, bookinstance) {
@@ -32,7 +32,7 @@ exports.bookinstance_detail = function (req, res) {
 };
 
 // Display BookInstance create form on GET
-exports.bookinstance_create_get = function (req, res) {
+exports.bookinstance_create_get = function (req, res, next) {
 	Book.find({}, 'title')
 		.exec(function (err, books) {
 			if (err) { return next(err); }
@@ -85,7 +85,7 @@ exports.bookinstance_create_post = [
 ];
 
 // Display BookInstance delete form on GET
-exports.bookinstance_delete_get = function (req, res) {
+exports.bookinstance_delete_get = function (req, res, next) {
 	BookInstance.findById(req.params.id)
 		.populate('book')
 		.exec(function (err, bookinstance) {
@@ -98,7 +98,7 @@ exports.bookinstance_delete_get = function (req, res) {
 };
 
 // Handle BookInstance delete on POST
-exports.bookinstance_delete_post = function (req, res) {
+exports.bookinstance_delete_post = function (req, res, next) {
 	BookInstance.findByIdAndRemove(req.body.bookinstanceid, function deleteBookinstance(err) {
 		if (err) { return next(err); }
 		res.redirect('/catalog/bookinstances');
@@ -106,7 +106,7 @@ exports.bookinstance_delete_post = function (req, res) {
 };
 
 // Display BookInstance update form on GET
-exports.bookinstance_update_get = function (req, res) {
+exports.bookinstance_update_get = function (req, res, next) {
 	async.parallel({
 		bookinstance: function(callback) {
 			BookInstance.findById(req.params.id)

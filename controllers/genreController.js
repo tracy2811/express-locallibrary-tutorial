@@ -5,7 +5,7 @@ var async = require('async');
 const validator = require('express-validator');
 
 // Display list of all Genre.
-exports.genre_list = function(req, res) {
+exports.genre_list = function(req, res, next) {
 	Genre.find()
 		.sort([['name', 'ascending']])
 		.exec(function (err, list_genres) {
@@ -15,7 +15,7 @@ exports.genre_list = function(req, res) {
 };
 
 // Display detail page for a specific Genre.
-exports.genre_detail = function(req, res) {
+exports.genre_detail = function(req, res, next) {
 	async.parallel({
 		genre: function (callback) {
 			Genre.findById(req.params.id)
@@ -37,7 +37,7 @@ exports.genre_detail = function(req, res) {
 };
 
 // Display Genre create form on GET.
-exports.genre_create_get = function(req, res) {
+exports.genre_create_get = function(req, res, next) {
 	res.render('genre_form', { title: 'Create Genre', });
 };
 
@@ -85,7 +85,7 @@ exports.genre_create_post = [
 ];
 
 // Display Genre delete form on GET.
-exports.genre_delete_get = function(req, res) {
+exports.genre_delete_get = function(req, res, next) {
 	async.parallel({
 		genre: function (callback) {
 			Genre.findById(req.params.id).exec(callback);
@@ -103,7 +103,7 @@ exports.genre_delete_get = function(req, res) {
 };
 
 // Handle Genre delete on POST.
-exports.genre_delete_post = function(req, res) {
+exports.genre_delete_post = function(req, res, next) {
 	async.parallel({
 		genre: function (callback) {
 			Genre.findById(req.body.genreid).exec(callback);
@@ -127,7 +127,7 @@ exports.genre_delete_post = function(req, res) {
 };
 
 // Display Genre update form on GET.
-exports.genre_update_get = function(req, res) {
+exports.genre_update_get = function(req, res, next) {
 	Genre.findById(req.params.id)
 		.exec(function (err, genre) {
 			if (err) { return next(err); }

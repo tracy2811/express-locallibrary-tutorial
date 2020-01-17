@@ -7,7 +7,7 @@ var async = require('async');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
-exports.index = function(req, res) {
+exports.index = function(req, res, next) {
 	async.parallel({
 		book_count: function (callback) {
 			Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
@@ -30,7 +30,7 @@ exports.index = function(req, res) {
 };
 
 // Display list of all books.
-exports.book_list = function(req, res) {
+exports.book_list = function(req, res, next) {
 	Book.find({}, 'title author')
 		.populate('author')
 		.exec(function (err, list_books) {
@@ -40,7 +40,7 @@ exports.book_list = function(req, res) {
 };
 
 // Display detail page for a specific book.
-exports.book_detail = function(req, res) {
+exports.book_detail = function(req, res, next) {
 	async.parallel({
 		book: function(callback) {
 			Book.findById(req.params.id)
@@ -64,7 +64,7 @@ exports.book_detail = function(req, res) {
 };
 
 // Display book create form on GET.
-exports.book_create_get = function(req, res) {
+exports.book_create_get = function(req, res, next) {
 	// Get all authors and genres, which we can use for adding to our book
 	async.parallel({
 		authors: function(callback) {
@@ -148,7 +148,7 @@ exports.book_create_post = [
 ];
 
 // Display book delete form on GET.
-exports.book_delete_get = function(req, res) {
+exports.book_delete_get = function(req, res, next) {
 	async.parallel({
 		book: function(callback) {
 			Book.findById(req.params.id).populate('author').populate('genre').exec(callback);
@@ -167,7 +167,7 @@ exports.book_delete_get = function(req, res) {
 };
 
 // Handle book delete on POST.
-exports.book_delete_post = function(req, res) {
+exports.book_delete_post = function(req, res, next) {
 	async.parallel({
 		book: function(callback) {
 			Book.findById(req.body.bookid).populate('author').populate('genre').exec(callback);
@@ -192,7 +192,7 @@ exports.book_delete_post = function(req, res) {
 };
 
 // Display book update form on GET.
-exports.book_update_get = function(req, res) {
+exports.book_update_get = function(req, res, next) {
 	// Get all authors and genres, which we can use for adding to our book
 	async.parallel({
 		book: function(callback) {
